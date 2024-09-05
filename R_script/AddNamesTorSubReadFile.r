@@ -4,8 +4,8 @@ if(!require("clusterProfiler")){
 }
 library("clusterProfiler")
 
-workFolder <- "E:\\sam_dog_seal\\rpkm\\"
-rSubReadFile <- "E:\\sam_dog_seal\\rpkm\\gene_counts_withDups_unstranded.txt"
+workFolder <- "E:\\my_folder\\rpkm\\"
+rSubReadFile <- "E:\\my_folder\\rpkm\\gene_counts_file.txt"
 setwd(workFolder)
 counts <- read.delim(rSubReadFile)
 
