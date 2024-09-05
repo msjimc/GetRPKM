@@ -31,9 +31,12 @@ namespace GetRPKM
             if (System.IO.File.Exists(fileName) == false) { return; }
 
             System.IO.StreamReader sf = null;
+            System.IO.StreamWriter sw = null;
 
             try
             {
+                genes = new Dictionary<string, gene>();
+
                 sf = new System.IO.StreamReader(fileName);
                 string line = "";
                 string[] items = null;
@@ -55,11 +58,42 @@ namespace GetRPKM
                     }
                 }
 
+                string export = fileName.Substring(0, fileName.LastIndexOf('\\')) + "\\RPKM.xls";
+                sw=new System.IO.StreamWriter(export);
+                sw.Write("Name");
+                List<double> totals = new List<double>();
+                int length = items.Length - 9;
+
+                items = titles.Split('\t');
+                for (int index = 0; index < length; index++)
+                { 
+                    totals.Add(0.0d); 
+                    sw.Write("\t" + items[index + 7]);
+                }
+                sw.Write('\n');
+
+                foreach (gene g in genes.Values)
+                { totals = g.AddCounts(totals); }
+
+                for (int index = 0; index < length; index++)
+                { totals[index] /= 1000000; }
+
+
+                List<string> keys = new List<string>();
+                foreach (string key in genes.Keys)
+                { keys.Add(key); }
+
+                keys.Sort();
+
+                foreach (string key in keys)
+                { genes[key].writeline(sw, totals); }
+
             }
             catch (Exception ex) { MessageBox.Show("Couldn't process file: " + ex.Message, "Error"); }
             finally
             {
                 if (sf != null) { sf.Close(); }
+                if (sw != null) { sw.Close(); }
             }
 
         }
