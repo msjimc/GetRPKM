@@ -3,7 +3,7 @@
 <img align="right" src="images/interface.jpg">
 
 
-This application imports a data file created by Rsubread that contains all the reads mapping to the transcripts in a GTF file and creates a reads per transcript kilobase per million reads in the library (aligned reads). While the data in the read counts file as reads mapped to each transcrip, ***GetRPKM*** aggregates the reads to form a counts per gene. The length used to calculate the reads per kilobase is created by noting all the sequences used in the transcripts and then counting the bases used at least once: If an exon appears more than once it will be counted once. For this to work the Rsubread package must be run with the Fraction options set to true. An example command is shown below:
+This application imports a data file created by Rsubread that contains all the reads mapping to the transcripts in a GTF file and creates a reads per transcript kilobase per million reads in the library (aligned reads). While the data in the read counts file as reads mapped to each transcrip, ***GetRPKM*** aggregates the reads to form a counts per gene. The length used to calculate the reads per kilobase is created by noting all the sequences used in the transcripts and then counting the bases used at least once: If an exon appears more than once it will be counted once. For this to work the Rsubread package must be run with the Fraction options set to true. An example command that also saves the results to a file is shown below:
 <pre>
 > geneCounts <-featureCounts(bams, 
                              annot.ext= gtf, 
@@ -16,6 +16,9 @@ This application imports a data file created by Rsubread that contains all the r
                              ignoreDup=FALSE, 
                              isPairedEnd=TRUE,  
                              strandSpecific=2)  
+
+dataGenes <- cbind(geneCounts$annotation, geneCounts$counts)
+write.table(x=as.data.frame(dataGenes), quote=FALSE, sep="\t", file="gene_counts_withDups.txt")  
 </pre>
 
 
